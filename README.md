@@ -13,11 +13,17 @@ kind. And I'm not responsible for anything you do with it.
 Usage
 -----
 klog [options] <eventid>
+
 options:
+
 	-h       : display this and exit
+	
 	-v       : display version number and exit
+	
 	-o <log> : write log to <log> (default=stdout)
+	
 	-m <map> : load the map character <map> (default=./map/en_US.map)
+	
 	-f       : keep on foreground (eg: no daemon)
 
 Example
