@@ -12,6 +12,7 @@ kind. And I'm not responsible for anything you do with it.
 
 Usage
 -----
+```
 klog [options] <eventid>
 
 options:
@@ -25,10 +26,13 @@ options:
 	-m <map> : load the map character <map> (default=./map/en_US.map)
 	
 	-f       : keep on foreground (eg: no daemon)
+```
 
 Example
 -------
+```
 ./klog -f -m ./map/fr_FR.map -o- 5
+```
 
 klog will log all of the keys pressed on "/dev/input/event5" as a
 french keyboard on the standard output. Moreover, it will run in
