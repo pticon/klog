@@ -26,6 +26,8 @@ options:
 	-m <map> : load the map character <map> (default=./map/en_US.map)
 	
 	-f       : keep on foreground (eg: no daemon)
+
+	-p <pid> : write the pid in the <pid> file (default=/var/run/klog.pid)
 ```
 
 Example
