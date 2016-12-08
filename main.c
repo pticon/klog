@@ -15,6 +15,7 @@
 #define PROGNAME	"klog"
 #define VERSION		"1.0"
 #define DEFAULT_MAP	"./map/en_US.map"
+#define DEFAULT_PIDFILE	"/var/run/klog.pid"
 
 #define F_NODAEMON	(1 << 0)
 
@@ -31,6 +32,7 @@ static void usage(void)
 	fprintf(stderr, "\t-o <log> : write log to <log> (default=stdout)\n");
 	fprintf(stderr, "\t-m <map> : load the map character <map> (default=%s)\n", DEFAULT_MAP);
 	fprintf(stderr, "\t-f       : keep on foreground (eg: no daemon)\n");
+	fprintf(stderr, "\t-p <pid> : write the pid in the <pid> file (default=%s)\n", DEFAULT_PIDFILE);
 }
 
 
@@ -60,6 +62,20 @@ static void setup_signals()
 }
 
 
+static int write_pid_file(const char *file, int pid)
+{
+	FILE	*f;
+
+	if ( (f = fopen(file, "w")) == NULL )
+		return -1;
+
+	fprintf(f, "%d\n", pid);
+	fclose(f);
+
+	return 0;
+}
+
+
 static int loop(struct log *log, struct map *map)
 {
 	struct input_event	ev;
@@ -86,11 +102,12 @@ int main(int argc, char *argv[])
 			ret = -1;
 	const char	*logname = "-";
 	const char	*mapname = DEFAULT_MAP;
+	const char	*pidfile = DEFAULT_PIDFILE;
 	struct map	*map = NULL;
 	struct log	*log = NULL;
 	unsigned	flags = 0;
 
-	while ( (c = getopt(argc, argv, "hvo:m:f")) != -1 )
+	while ( (c = getopt(argc, argv, "hvo:m:fp")) != -1 )
 	{
 		switch ( c )
 		{
@@ -112,6 +129,10 @@ int main(int argc, char *argv[])
 
 			case 'f':
 			flags |= F_NODAEMON;
+			break;
+
+			case 'p':
+			pidfile = optarg;
 			break;
 
 			default:
@@ -160,6 +181,8 @@ int main(int argc, char *argv[])
 
 			default:
 			fprintf(stderr, "Child pid %d\n", pid);
+			if ( write_pid_file(pidfile, pid) )
+				fprintf(stderr, "Unable to write pid in %s\n", pidfile);
 			return 0;
 		}
 	}
