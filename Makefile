@@ -1,8 +1,8 @@
 TARGET=klog
 
 
-CC:=gcc
-LD:=gcc
+CC?=gcc
+LD:=$(CC)
 CFLAGS:=-Wall -Wunused -Werror
 LDFLAGS:=
 

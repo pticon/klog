@@ -2,9 +2,10 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <linux/input.h>
+#include <sys/param.h>
 #include <string.h>
 
+#include "compat.h"
 #include "mapper.h"
 
 /* Represent the different values for one key

@@ -1,14 +1,24 @@
-klog - a GNU/Linux keylogger
-============================
+klog - a GNU/Linux and FreeBSD keylogger
+========================================
 
 klog tries to log all of the keys pressed on the keyboard.
 By default, klog starts as a daemon and you should send SIGTERM
 in order to stop it.
 
+This software was primary developed on Linux but it also works
+on FreeBSD. Enjoy :)
+
 Warning
 -------
 No part of klog may be used to break the law, or to cause damage of any
 kind. And I'm not responsible for anything you do with it.
+
+FreeBSD
+-------
+To build `klog` on `FreeBSD` you will need to install a few dependencies :
+```
+sudo pkg install gmake
+```
 
 Usage
 -----

@@ -6,8 +6,10 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <linux/input.h>
+#include <sys/param.h>
 
+
+#include "compat.h"
 #include "mapper.h"
 #include "logger.h"
 

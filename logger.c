@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
-#include <linux/input.h>
+#include <sys/param.h>
 #include <time.h>
 
+#include "compat.h"
 #include "logger.h"
+
 
 #define DEV_EVENT	"/dev/input/event"
 
