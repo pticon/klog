@@ -157,7 +157,7 @@ error:
 }
 
 
-void mapper_del_key(struct key *key)
+static void mapper_del_key(struct key *key)
 {
 	if ( key == NULL )
 		return;
