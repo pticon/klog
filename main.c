@@ -13,11 +13,12 @@
 
 
 #define PROGNAME	"klog"
-#define VERSION		"1.0"
+#define VERSION		"1.1-dev"
 #define DEFAULT_MAP	"./map/en_US.map"
 #define DEFAULT_PIDFILE	"/var/run/klog.pid"
 
 #define F_NODAEMON	(1 << 0)
+#define F_NOINSTANCE	(1 << 1)
 
 
 static int	stoplog = 0;
@@ -34,12 +35,33 @@ static void usage(void)
 	fprintf(stderr, "\t-m <map> : load the map character <map> (default=%s)\n", DEFAULT_MAP);
 	fprintf(stderr, "\t-f       : keep on foreground (eg: no daemon)\n");
 	fprintf(stderr, "\t-p <pid> : write the pid in the <pid> file (default=%s)\n", DEFAULT_PIDFILE);
+	fprintf(stderr, "\t-n       : do not check if an instance is already running\n");
 }
 
 
 static void version(void)
 {
 	fprintf(stderr, "%s version %s\n", PROGNAME, VERSION);
+}
+
+
+static int check_instance(const char *pidfile)
+{
+	FILE	*f;
+	int	pid;
+
+	if ( !pidfile )
+		return 0;
+
+	if ( (f = fopen(pidfile, "r")) == NULL )
+		return 0;
+
+	if ( !fscanf(f, "%d", &pid) )
+		pid = 0;
+
+	fclose(f);
+
+	return pid;
 }
 
 
@@ -100,7 +122,8 @@ static int loop(struct log *log, struct map *map)
 int main(int argc, char *argv[])
 {
 	int		c,
-			ret = -1;
+			ret = -1,
+			pid;
 	const char	*logname = "-";
 	const char	*mapname = DEFAULT_MAP;
 	const char	*pidfile = DEFAULT_PIDFILE;
@@ -108,7 +131,7 @@ int main(int argc, char *argv[])
 	struct log	*log = NULL;
 	unsigned	flags = 0;
 
-	while ( (c = getopt(argc, argv, "hqvo:m:fp")) != -1 )
+	while ( (c = getopt(argc, argv, "hqvo:m:fpn")) != -1 )
 	{
 		switch ( c )
 		{
@@ -140,6 +163,10 @@ int main(int argc, char *argv[])
 			pidfile = optarg;
 			break;
 
+			case 'n':
+			flags |= F_NOINSTANCE;
+			break;
+
 			default:
 			fprintf(stderr, "Unknown option %c\n", (char) c);
 			goto error;
@@ -157,6 +184,12 @@ int main(int argc, char *argv[])
 	if ( getuid() != 0 )
 	{
 		fprintf(stderr, "Are you root ?\n");
+		goto error;
+	}
+
+	if ( (flags & F_NOINSTANCE) == 0 && (pid = check_instance(pidfile)) )
+	{
+		fprintf(stderr, "%s is already running on PID %d\n", PROGNAME, pid);
 		goto error;
 	}
 
@@ -209,6 +242,8 @@ error:
 
 	if ( map != NULL )
 		mapper_unload(map);
+
+	unlink(pidfile);
 
 	return ret;
 }

@@ -30,6 +30,8 @@ options:
 	-f       : keep on foreground (eg: no daemon)
 
 	-p <pid> : write the pid in the <pid> file (default=/var/run/klog.pid)
+
+	-n       : do not check if an instance is already running
 ```
 
 Example
