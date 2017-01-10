@@ -28,6 +28,7 @@ static void usage(void)
 	fprintf(stderr, "usage: %s [options] <eventid>\n", PROGNAME);
 	fprintf(stderr, "options:\n");
 	fprintf(stderr, "\t-h       : display this and exit\n");
+	fprintf(stderr, "\t-q       : quiet mode\n");
 	fprintf(stderr, "\t-v       : display version number and exit\n");
 	fprintf(stderr, "\t-o <log> : write log to <log> (default=stdout)\n");
 	fprintf(stderr, "\t-m <map> : load the map character <map> (default=%s)\n", DEFAULT_MAP);
@@ -107,13 +108,17 @@ int main(int argc, char *argv[])
 	struct log	*log = NULL;
 	unsigned	flags = 0;
 
-	while ( (c = getopt(argc, argv, "hvo:m:fp")) != -1 )
+	while ( (c = getopt(argc, argv, "hqvo:m:fp")) != -1 )
 	{
 		switch ( c )
 		{
 			case 'h':
 			usage();
 			return 0;
+
+			case 'q':
+			freopen("/dev/null", "w", stderr);
+			break;
 
 			case 'v':
 			version();

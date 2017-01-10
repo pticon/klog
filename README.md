@@ -18,6 +18,8 @@ klog [options] <eventid>
 options:
 
 	-h       : display this and exit
+
+	-q       : quiet mode
 	
 	-v       : display version number and exit
 	
